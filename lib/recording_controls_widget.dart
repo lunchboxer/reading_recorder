@@ -83,6 +83,42 @@ class RecordingControlsWidgetState extends State<RecordingControlsWidget> {
     );
   }
 
+  Widget _buildCodecDropdown(RecordingService recordingService) {
+    return DropdownButton<AudioCodec>(
+      value: recordingService.selectedCodec,
+      onChanged: (AudioCodec? newValue) {
+        if (newValue != null) {
+          recordingService.setSelectedCodec(newValue);
+        }
+      },
+      items: AudioCodec.values
+          .map<DropdownMenuItem<AudioCodec>>((AudioCodec value) {
+        return DropdownMenuItem<AudioCodec>(
+          value: value,
+          child: Text(value.name),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildSamplingRateDropdown(RecordingService recordingService) {
+    return DropdownButton<int>(
+      value: recordingService.samplingRate,
+      onChanged: (int? newValue) {
+        if (newValue != null) {
+          recordingService.setSamplingRate(newValue);
+        }
+      },
+      items: [8000, 16000, 22050, 44100, 48000]
+          .map<DropdownMenuItem<int>>((int value) {
+        return DropdownMenuItem<int>(
+          value: value,
+          child: Text('$value Hz'),
+        );
+      }).toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final recordingService = Provider.of<RecordingService>(context);
@@ -90,7 +126,13 @@ class RecordingControlsWidgetState extends State<RecordingControlsWidget> {
 
     return Column(
       children: [
-        if (!recordingService.isRecording) _buildBitrateDropdown(),
+        if (!recordingService.isRecording) ...[
+          _buildBitrateDropdown(),
+          const SizedBox(height: 10),
+          _buildCodecDropdown(recordingService),
+          const SizedBox(height: 10),
+          _buildSamplingRateDropdown(recordingService),
+        ],
         const SizedBox(height: 20),
         if (recordingService.isRecording) ...[
           _buildRecordingIndicator(),
@@ -101,6 +143,8 @@ class RecordingControlsWidgetState extends State<RecordingControlsWidget> {
               await fileManagementService.updateRecordingDetails(
                 recordingService.recordingPath,
                 recordingService.startTime!,
+                recordingService.selectedBitrate,
+                recordingService.selectedCodec,
               );
               widget.onRecordingComplete();
             },

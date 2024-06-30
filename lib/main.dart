@@ -99,7 +99,7 @@ class AppContent extends StatelessWidget {
       body: recordingService.recordingPath == null
           ? RecordingPage(onRecordingComplete: () {
               // This will trigger a rebuild when recording is complete
-              recordingService.notifyListeners();
+              recordingService.onRecordingComplete();
             })
           : PlaybackPage(onFileDeleted: () {
               recordingService.clearRecordingPath();

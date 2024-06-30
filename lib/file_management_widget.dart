@@ -14,7 +14,7 @@ class FileManagementWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final recordingService = Provider.of<RecordingService>(context);
-    final selectedBitrate = recordingService.selectedBitrate;
+    // final selectedBitrate = recordingService.selectedBitrate;
     final fileManagementService = Provider.of<FileManagementService>(context);
 
     return Column(
@@ -35,7 +35,9 @@ class FileManagementWidget extends StatelessWidget {
         Text('Duration: ${fileManagementService.recordingDuration}'),
         Text('File Size: ${fileManagementService.recordingFileSize}'),
         Text('Filename: ${recordingService.recordingPath?.split('/').last}'),
-        Text('Bitrate: ${int.parse(selectedBitrate) ~/ 1000} kbps'),
+        Text(
+            'Bitrate: ${int.parse(recordingService.selectedBitrate) ~/ 1000} kbps'),
+        Text('Codec: ${recordingService.selectedCodec.name}'),
         Text('Created At: ${fileManagementService.recordingCreatedAt}'),
       ],
     );
