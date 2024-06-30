@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:provider/provider.dart';
 import 'recording_service.dart';
+import 'package:provider/provider.dart';
 
 class AudioPlayerWidget extends StatefulWidget {
   const AudioPlayerWidget({super.key});
@@ -46,7 +46,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+    return "$twoDigitMinutes:$twoDigitSeconds";
   }
 
   @override
@@ -59,51 +59,48 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              iconSize: 72,
-              icon: Icon(_playerState == PlayerState.playing
-                  ? Icons.pause
-                  : Icons.play_arrow),
-              onPressed: () {
-                if (_playerState == PlayerState.playing) {
-                  _audioPlayer.pause();
-                } else {
-                  _audioPlayer
-                      .play(DeviceFileSource(recordingService.recordingPath!));
-                }
-              },
+              iconSize: 48,
+              icon: const Icon(Icons.play_arrow),
+              onPressed: _playerState == PlayerState.playing
+                  ? null
+                  : () {
+                      _audioPlayer.play(
+                          DeviceFileSource(recordingService.recordingPath!));
+                    },
             ),
-            if (_playerState == PlayerState.playing)
-              IconButton(
-                iconSize: 72,
-                icon: const Icon(Icons.stop),
-                onPressed: () {
-                  _audioPlayer.stop();
-                },
-              ),
+            IconButton(
+              iconSize: 48,
+              icon: const Icon(Icons.pause),
+              onPressed: _playerState == PlayerState.playing
+                  ? () {
+                      _audioPlayer.pause();
+                    }
+                  : null,
+            ),
+            IconButton(
+              iconSize: 48,
+              icon: const Icon(Icons.stop),
+              onPressed: _playerState == PlayerState.playing
+                  ? () {
+                      _audioPlayer.stop();
+                    }
+                  : null,
+            ),
           ],
         ),
         Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(children: [
-              Slider(
-                value: _position.inSeconds.toDouble(),
-                min: 0.0,
-                max: _duration.inSeconds.toDouble(),
-                onChanged: (value) {
-                  final position = Duration(seconds: value.toInt());
-                  _audioPlayer.seek(position);
-                },
-              ),
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(_formatDuration(_position)),
-                      Text(_formatDuration(_duration)),
-                    ],
-                  )),
-            ])),
+          padding: const EdgeInsets.all(8.0),
+          child: Slider(
+            value: _position.inMilliseconds.toDouble(),
+            min: 0.0,
+            max: _duration.inMilliseconds.toDouble(),
+            onChanged: (value) {
+              final position = Duration(seconds: value.toInt());
+              _audioPlayer.seek(position);
+            },
+          ),
+        ),
+        Text('${_formatDuration(_position)} / ${_formatDuration(_duration)}'),
       ],
     );
   }
