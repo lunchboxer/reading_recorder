@@ -28,7 +28,6 @@ class PlaybackPage extends StatelessWidget {
             const AudioPlayerWidget(),
             const SizedBox(height: 20),
             FileManagementWidget(
-              selectedBitrate: '128000', // You may want to update this
               onFileDeleted: onFileDeleted,
             ),
           ],

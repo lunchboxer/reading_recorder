@@ -4,18 +4,17 @@ import 'recording_service.dart';
 import 'file_management_service.dart';
 
 class FileManagementWidget extends StatelessWidget {
-  final String selectedBitrate;
   final VoidCallback onFileDeleted;
 
   const FileManagementWidget({
     super.key,
-    required this.selectedBitrate,
     required this.onFileDeleted,
   });
 
   @override
   Widget build(BuildContext context) {
     final recordingService = Provider.of<RecordingService>(context);
+    final selectedBitrate = recordingService.selectedBitrate;
     final fileManagementService = Provider.of<FileManagementService>(context);
 
     return Column(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'recording_service.dart';
-import 'playback_service.dart';
 import 'file_management_service.dart';
 import 'recording_page.dart';
 import 'playback_page.dart';
@@ -13,7 +12,6 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => RecordingService()),
-        ChangeNotifierProvider(create: (_) => PlaybackService()),
         ChangeNotifierProvider(create: (_) => FileManagementService()),
       ],
       child: const MyApp(),
@@ -109,4 +107,3 @@ class AppContent extends StatelessWidget {
     );
   }
 }
-

@@ -18,7 +18,8 @@ class RecordingControlsWidget extends StatefulWidget {
 }
 
 class RecordingControlsWidgetState extends State<RecordingControlsWidget> {
-  String selectedBitrate = '128000';
+  String get selectedBitrate =>
+      Provider.of<RecordingService>(context, listen: false).selectedBitrate;
   final List<String> bitrates = [
     '12000',
     '24000',
@@ -68,7 +69,8 @@ class RecordingControlsWidgetState extends State<RecordingControlsWidget> {
       onChanged: (String? newValue) {
         if (newValue != null) {
           setState(() {
-            selectedBitrate = newValue;
+            Provider.of<RecordingService>(context, listen: false)
+                .setSelectedBitrate(newValue);
           });
         }
       },
@@ -110,7 +112,7 @@ class RecordingControlsWidgetState extends State<RecordingControlsWidget> {
           ),
         ] else
           ElevatedButton.icon(
-            onPressed: () => recordingService.startRecording(selectedBitrate),
+            onPressed: () => recordingService.startRecording(),
             icon: const Icon(Icons.mic),
             label: const Text('Start Recording'),
             style: ElevatedButton.styleFrom(
